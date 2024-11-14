@@ -1,0 +1,16 @@
+[
+  {
+    "estado": "false",
+    "dni_alumno": 46940764,
+    "id_clase": 123,
+    "id_inscripcion": 1,
+    "habilitado": true
+  },
+  {
+    "estado": "true",
+    "dni_alumno": 47283920,
+    "id_clase": 124,
+    "id_inscripcion": 2,
+    "habilitado": true
+  }
+]

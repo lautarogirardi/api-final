@@ -1,0 +1,15 @@
+[
+  {
+    "nombre": "informatica",
+    "horario": "19:00",
+    "dni_profesor": 46930723,
+    "division": "4to",
+    "estado": "curso",
+    "foro": {},
+    "id_clase": 123,
+    "id_material": [1, 3],
+    "id_evaluacion": [556, 557],
+    "id_inscripcion": [1, 2],
+    "habilitado": true
+  }
+]

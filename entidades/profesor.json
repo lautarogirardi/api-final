@@ -1,0 +1,13 @@
+[
+  {
+    "dni_profesor": 46930723,
+    "nombre": "jose",
+    "apellido": "coleto",
+    "fecha_de_nacimiento": "13 de enero",
+    "materia_que_da": "matematica",
+    "teléfono": 299434123,
+    "división": "4to 2da",
+    "id_clase": [123],
+    "habilitado": true
+  }
+]

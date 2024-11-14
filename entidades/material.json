@@ -1,0 +1,18 @@
+[
+  {
+    "nombre": "informatica",
+    "descripcion": "info",
+    "fecha_publi": "12 marzo",
+    "id_material": 1,
+    "id_clase": 123,
+    "habilitado": true
+  },
+  {
+    "nombre": "biologia",
+    "descripcion": "cambios climaticos",
+    "fecha_publi": "23 abril",
+    "id_material": 3,
+    "id_clase": 123,
+    "habilitado": true
+  }
+]

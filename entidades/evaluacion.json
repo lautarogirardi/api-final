@@ -1,0 +1,24 @@
+[
+  {
+    "nombre": "biologia",
+    "descripcion": "",
+    "fecha_publi": "12 de febrero",
+    "duracion": "60min",
+    "requisitos": "70% bien hecho",
+    "nota": 6,
+    "id_evaluacion": 556,
+    "id_clase": 123,
+    "habilitado": true
+  },
+  {
+    "nombre": "biologia",
+    "descripcion": "",
+    "fecha_publi": "12 de febrero",
+    "duracion": "60min",
+    "requisitos": "70% bien hecho",
+    "nota": 6,
+    "id_evaluacion": 557,
+    "id_clase": 123,
+    "habilitado": true
+  }
+]

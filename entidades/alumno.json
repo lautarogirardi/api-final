@@ -1,0 +1,23 @@
+[
+  {
+    "dni_alumno": 46940533,
+    "nombre": "juanmanuel",
+    "apellido": "pichiman",
+    "fecha_de_nacimiento": "15 de mayo",
+    "id_clase": [
+      125
+    ],
+    "habilitado": true
+  },
+  {
+    "dni_alumno": 46940733,
+    "nombre": "juan2",
+    "apellido": "perez",
+    "fecha_de_nacimeinto": "5 de mayo",
+    "id_clase": [
+      123,
+      124
+    ],
+    "habilitado": true
+  }
+]
