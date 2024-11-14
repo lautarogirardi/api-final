@@ -7,9 +7,36 @@
     "estado": "curso",
     "foro": {},
     "id_clase": 123,
-    "id_material": [1, 3],
-    "id_evaluacion": [556, 557],
-    "id_inscripcion": [1, 2],
+    "id_material": [
+      1,
+      3
+    ],
+    "id_evaluacion": [
+      556,
+      557
+    ],
+    "id_inscripcion": [
+      1,
+      2,
+      3
+    ],
+    "habilitado": true
+  },
+  {
+    "nombre": "cuarto año ",
+    "horario": "19:00",
+    "dni_profesor": 303978969,
+    "division": "4to",
+    "estado": "curso",
+    "foro": {},
+    "id_clase": 124,
+    "id_material": [
+      4
+    ],
+    "id_evaluacion": [],
+    "id_inscripcion": [
+      3
+    ],
     "habilitado": true
   }
 ]

@@ -14,5 +14,21 @@
     "id_material": 3,
     "id_clase": 123,
     "habilitado": true
+  },
+  {
+    "nombre": "dibujo tecnico",
+    "descripcion": "cambios climaticos",
+    "fecha_publi": "31 abril",
+    "id_material": 4,
+    "id_clase": 124,
+    "habilitado": true
+  },
+  {
+    "nombre": "fisica",
+    "descripcion": "cambios climaticos",
+    "fecha_publi": "3 abril",
+    "id_material": 4,
+    "id_clase": 124,
+    "habilitado": true
   }
 ]

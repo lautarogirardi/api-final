@@ -8,9 +8,36 @@
   },
   {
     "estado": "true",
-    "dni_alumno": 47283920,
+    "dni_alumno": 30397598,
     "id_clase": 124,
     "id_inscripcion": 2,
-    "habilitado": true
+    "habilitado": true,
+    "alumno": {
+      "dni_alumno": 30397598,
+      "nombre": "juanmanuel",
+      "apellido": "pichiman",
+      "fecha_de_nacimiento": "15 de mayo",
+      "id_clase": [
+        125
+      ],
+      "habilitado": true
+    }
+  },
+  {
+    "estado": "true",
+    "dni_alumno": 123,
+    "id_clase": 124,
+    "id_inscripcion": 3,
+    "habilitado": true,
+    "alumno": {
+      "dni_alumno": 123,
+      "nombre": "juanmanuel",
+      "apellido": "pichiman",
+      "fecha_de_nacimiento": "15 de mayo",
+      "id_clase": [
+        125
+      ],
+      "habilitado": true
+    }
   }
 ]

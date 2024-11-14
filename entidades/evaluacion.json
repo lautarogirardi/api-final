@@ -20,5 +20,16 @@
     "id_evaluacion": 557,
     "id_clase": 123,
     "habilitado": true
+  },
+  {
+    "nombre": "fisica",
+    "descripcion": "",
+    "fecha_publi": "2 de febrero",
+    "duracion": "60min",
+    "requisitos": "70% bien hecho",
+    "nota": 6,
+    "id_evaluacion": 900,
+    "id_clase": 124,
+    "habilitado": true
   }
 ]

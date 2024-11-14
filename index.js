@@ -10,7 +10,7 @@ app.get('/alumno', (req, res) => {
 });
 
 app.post('/alumno', (req, res) => {
-  const nuevoAlumno = { ...req.body, habilitado: true }; // Por defecto, el alumno se agrega como habilitado
+  const nuevoAlumno = { ...req.body, habilitado: true }; // Por defecto, el alumno se agrega como habilitado en caso de que no se agregue la parte de deshabilitado
   let alumnos = JSON.parse(fs.readFileSync('./entidades/alumno.json'));
 
   // Verificamos si alumnos es un arreglo
@@ -92,6 +92,7 @@ app.delete('/alumno', (req, res) => {
 //profesores
 
 
+
 app.get('/profesor', (req, res) => {
   const profesores = JSON.parse(fs.readFileSync('./entidades/profesor.json'));
   res.json(profesores);
@@ -100,6 +101,7 @@ app.get('/profesor', (req, res) => {
 app.post('/profesor', (req, res) => {
   const nuevoProfesor = { ...req.body, habilitado: true }; // Por defecto, el profesor se agrega como habilitado
   let profesores = JSON.parse(fs.readFileSync('./entidades/profesor.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   // Verificar si profesores es un arreglo
   if (!Array.isArray(profesores)) {
@@ -113,18 +115,39 @@ app.post('/profesor', (req, res) => {
   }
 
   profesores.push(nuevoProfesor);
+
+  // Agregar profesor a la clase correspondiente
+  if (nuevoProfesor.id_clase) {
+    const claseIndex = clases.findIndex(clase => clase.id_clase === nuevoProfesor.id_clase);
+    if (claseIndex !== -1) {
+      clases[claseIndex].dni_profesor = nuevoProfesor.dni_profesor;
+    }
+  }
+
   fs.writeFileSync('./entidades/profesor.json', JSON.stringify(profesores, null, 2));
+  fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
   res.send("Profesor agregado exitosamente");
 });
 
 app.put('/profesor', (req, res) => {
   const { dni_profesor, ...restoDatos } = req.body;
   let profesores = JSON.parse(fs.readFileSync('./entidades/profesor.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = profesores.findIndex(profesor => profesor.dni_profesor === dni_profesor);
   if (index !== -1) {
     profesores[index] = { ...profesores[index], ...restoDatos };
+
+    // Actualizar profesor en la clase correspondiente
+    if (restoDatos.id_clase) {
+      const claseIndex = clases.findIndex(clase => clase.id_clase === restoDatos.id_clase);
+      if (claseIndex !== -1) {
+        clases[claseIndex].dni_profesor = dni_profesor;
+      }
+    }
+
     fs.writeFileSync('./entidades/profesor.json', JSON.stringify(profesores, null, 2));
+    fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
     res.send('Profesor actualizado exitosamente');
   } else {
     res.status(404).send('Profesor no encontrado');
@@ -134,11 +157,22 @@ app.put('/profesor', (req, res) => {
 app.patch('/profesor', (req, res) => {
   const { dni_profesor, ...restoDatos } = req.body;
   let profesores = JSON.parse(fs.readFileSync('./entidades/profesor.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = profesores.findIndex(profesor => profesor.dni_profesor === dni_profesor);
   if (index !== -1) {
     profesores[index] = { ...profesores[index], ...restoDatos };
+
+    // Actualizar profesor en la clase correspondiente
+    if (restoDatos.id_clase) {
+      const claseIndex = clases.findIndex(clase => clase.id_clase === restoDatos.id_clase);
+      if (claseIndex !== -1) {
+        clases[claseIndex].dni_profesor = dni_profesor;
+      }
+    }
+
     fs.writeFileSync('./entidades/profesor.json', JSON.stringify(profesores, null, 2));
+    fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
     res.send('Profesor actualizado parcialmente');
   } else {
     res.status(404).send('Profesor no encontrado');
@@ -148,13 +182,21 @@ app.patch('/profesor', (req, res) => {
 app.delete('/profesor', (req, res) => {
   const { dni_profesor } = req.body;
   let profesores = JSON.parse(fs.readFileSync('./entidades/profesor.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = profesores.findIndex(profesor => profesor.dni_profesor === dni_profesor);
-
   if (index !== -1) {
     profesores[index].habilitado = !profesores[index].habilitado;
-    fs.writeFileSync('./entidades/profesor.json', JSON.stringify(profesores, null, 2));
 
+    // Remover profesor de la clase correspondiente
+    clases.forEach(clase => {
+      if (clase.dni_profesor === dni_profesor) {
+        clase.dni_profesor = null;
+      }
+    });
+
+    fs.writeFileSync('./entidades/profesor.json', JSON.stringify(profesores, null, 2));
+    fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
     res.send(`Profesor ${profesores[index].habilitado ? 'habilitado' : 'deshabilitado'} exitosamente`);
   } else {
     res.status(404).send('Profesor no encontrado');
@@ -163,6 +205,7 @@ app.delete('/profesor', (req, res) => {
 
 
 //material
+
 
 
 app.get('/material', (req, res) => {
@@ -174,6 +217,11 @@ app.post('/material', (req, res) => {
   const nuevoMaterial = { ...req.body, habilitado: true }; // Por defecto, el material se agrega como habilitado
   let material = JSON.parse(fs.readFileSync('./entidades/material.json'));
   let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
+
+  // Verificar si material es un arreglo
+  if (!Array.isArray(material)) {
+    material = [];
+  }
 
   // Agregar ID de material a la clase correspondiente
   const claseIndex = clases.findIndex(c => c.id_clase === nuevoMaterial.id_clase);
@@ -233,18 +281,34 @@ app.patch('/material', (req, res) => {
 app.delete('/material', (req, res) => {
   const { id_material } = req.body;
   let material = JSON.parse(fs.readFileSync('./entidades/material.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = material.findIndex(m => m.id_material === id_material);
-
   if (index !== -1) {
     material[index].habilitado = !material[index].habilitado;
+
+    // Actualizar la clase correspondiente
+    clases.forEach(clase => {
+      const materialIndex = clase.id_material.indexOf(id_material);
+      if (materialIndex !== -1) {
+        clase.id_material.splice(materialIndex, 1);
+        if (material[index].habilitado) {
+          clase.id_material.push(id_material);
+        }
+      }
+    });
+
     fs.writeFileSync('./entidades/material.json', JSON.stringify(material, null, 2));
+    fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
 
     res.send(`Material ${material[index].habilitado ? 'habilitado' : 'deshabilitado'} exitosamente`);
   } else {
     res.status(404).send('Material no encontrado');
   }
 });
+
+
+
 
 //evaluacion
 
@@ -318,18 +382,30 @@ app.patch('/evaluacion', (req, res) => {
 app.delete('/evaluacion', (req, res) => {
   const { id_evaluacion } = req.body;
   let evaluaciones = JSON.parse(fs.readFileSync('./entidades/evaluacion.json'));
+  let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = evaluaciones.findIndex(e => e.id_evaluacion === id_evaluacion);
 
   if (index !== -1) {
     evaluaciones[index].habilitado = !evaluaciones[index].habilitado;
-    fs.writeFileSync('./entidades/evaluacion.json', JSON.stringify(evaluaciones, null, 2));
 
+    // Remover evaluación de la clase correspondiente
+    clases.forEach(clase => {
+      const evalIndex = clase.id_evaluacion.indexOf(id_evaluacion);
+      if (evalIndex !== -1) {
+        clase.id_evaluacion.splice(evalIndex, 1);
+      }
+    });
+
+    fs.writeFileSync('./entidades/evaluacion.json', JSON.stringify(evaluaciones, null, 2));
+    fs.writeFileSync('./entidades/clase.json', JSON.stringify(clases, null, 2));
     res.send(`Evaluación ${evaluaciones[index].habilitado ? 'habilitada' : 'deshabilitada'} exitosamente`);
   } else {
     res.status(404).send('Evaluación no encontrada');
   }
 });
+
+
 
 //clases
 
@@ -343,24 +419,28 @@ app.get('/clase', (req, res) => {
   let inscripciones = JSON.parse(fs.readFileSync('./entidades/inscripcion.json'));
 
   clases = clases.map(clase => {
-    const profesor = profesores.find(prof => prof.dni_profesor === clase.dni_profesor);
+    if (!clase.habilitado) return null;
+
+    const profesor = profesores.find(prof => prof.dni_profesor === clase.dni_profesor && prof.habilitado);
     const alumnosInscritos = inscripciones
-      .filter(inscripcion => inscripcion.id_clase === clase.id_clase)
+      .filter(inscripcion => inscripcion.id_clase === clase.id_clase && inscripcion.habilitado)
       .map(inscripcion => {
-        const alumno = alumnos.find(al => al.dni_alumno === inscripcion.dni_alumno);
-        return { ...alumno, estado: inscripcion.estado, id_inscripcion: inscripcion.id_inscripcion };
-      });
-    const materialesClase = materiales.filter(material => clase.id_material.includes(material.id_material));
-    const evaluacionesClase = evaluaciones.filter(eval => clase.id_evaluacion.includes(eval.id_evaluacion));
+        const alumno = alumnos.find(al => al.dni_alumno === inscripcion.dni_alumno && al.habilitado);
+        return alumno ? { dni_alumno: alumno.dni_alumno, nombre: alumno.nombre, estado: inscripcion.estado, id_inscripcion: inscripcion.id_inscripcion } : null;
+      })
+      .filter(alumno => alumno !== null);
+
+    const materialesClase = materiales.filter(material => clase.id_material.includes(material.id_material) && material.habilitado);
+    const evaluacionesClase = evaluaciones.filter(eval => clase.id_evaluacion.includes(eval.id_evaluacion) && eval.habilitado);
 
     return {
       ...clase,
-      profesor: profesor,
+      profesor: profesor ? { dni_profesor: profesor.dni_profesor, nombre: profesor.nombre } : null,
       alumnos: alumnosInscritos,
       materiales: materialesClase,
       evaluaciones: evaluacionesClase
     };
-  });
+  }).filter(clase => clase !== null);
 
   res.json(clases);
 });
@@ -423,7 +503,10 @@ app.delete('/clase', (req, res) => {
   }
 });
 
+
 //inscripcion
+
+
 
 app.get('/inscripcion', (req, res) => {
   const inscripciones = JSON.parse(fs.readFileSync('./entidades/inscripcion.json'));
@@ -434,6 +517,20 @@ app.post('/inscripcion', (req, res) => {
   const nuevaInscripcion = { ...req.body, habilitado: true }; // Por defecto, la inscripción se agrega como habilitada
   let inscripciones = JSON.parse(fs.readFileSync('./entidades/inscripcion.json'));
   let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
+  let alumnos = JSON.parse(fs.readFileSync('./entidades/alumno.json'));
+
+  // Verificar si el alumno ya está inscrito en la clase
+  const inscripcionExistente = inscripciones.find(inscripcion => inscripcion.dni_alumno === nuevaInscripcion.dni_alumno && inscripcion.id_clase === nuevaInscripcion.id_clase);
+  if (inscripcionExistente) {
+    return res.status(400).send('El alumno ya está inscrito en esta clase.');
+  }
+
+  // Agregar datos del alumno a la inscripción
+  const alumno = alumnos.find(al => al.dni_alumno === nuevaInscripcion.dni_alumno);
+  if (!alumno) {
+    return res.status(404).send('Alumno no encontrado');
+  }
+  nuevaInscripcion.alumno = alumno;
 
   // Asignar ID único a la nueva inscripción
   nuevaInscripcion.id_inscripcion = inscripciones.length ? inscripciones[inscripciones.length - 1].id_inscripcion + 1 : 1;
@@ -499,7 +596,6 @@ app.delete('/inscripcion', (req, res) => {
   let clases = JSON.parse(fs.readFileSync('./entidades/clase.json'));
 
   const index = inscripciones.findIndex(i => i.id_inscripcion === id_inscripcion);
-
   if (index !== -1) {
     inscripciones[index].habilitado = !inscripciones[index].habilitado;
     fs.writeFileSync('./entidades/inscripcion.json', JSON.stringify(inscripciones, null, 2));
@@ -513,5 +609,3 @@ app.delete('/inscripcion', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
-
-

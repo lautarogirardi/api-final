@@ -19,5 +19,25 @@
       124
     ],
     "habilitado": true
+  },
+  {
+    "dni_alumno": 30397598,
+    "nombre": "juanmanuel",
+    "apellido": "pichiman",
+    "fecha_de_nacimiento": "15 de mayo",
+    "id_clase": [
+      125
+    ],
+    "habilitado": true
+  },
+  {
+    "dni_alumno": 123,
+    "nombre": "juanmanuel",
+    "apellido": "pichiman",
+    "fecha_de_nacimiento": "15 de mayo",
+    "id_clase": [
+      125
+    ],
+    "habilitado": true
   }
 ]
